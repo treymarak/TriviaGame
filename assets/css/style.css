@@ -6,16 +6,23 @@ z-index: -1;
 
 }
 
-div{
+.section{
 
     background-color: #41a6de;
     font-family: Bangers, cursive;
     text-align: center;
     position: fixed;
-    width: 500px;
-    height: 500px;
-    top: 100px;
-    left: 390px;
+    width: 85%;
+    height: 85%;
+    top: 50px;
+    left: 100px;
+
+
+}
+
+h1{
+
+    font-size: 36px;
 
 
 }
