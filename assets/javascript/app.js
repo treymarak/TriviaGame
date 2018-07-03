@@ -8,30 +8,25 @@ var queryURL = "https://opentdb.com/api.php?amount=10&category=29&difficulty=med
 
 
 function questions(){
+    
+    $.getJSON({
+      url: queryURL,
+      method: "GET"
+    }).then(function(response) {
+      console.log(response);
+    });
 
     for (i = 0; i < question.length; i++){
 
         var arr = question[i];
         console.log(arr);
+        
 
-$.ajax({
-  url: queryURL,
-  method: "GET"
-}).then(function(response) {
-  console.log(response);
-
-
-
-});
-
+    }
 
 };
 
-
-
-};
-
-
+questions();
 
 
 
