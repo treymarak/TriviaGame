@@ -1,8 +1,21 @@
-body{
+img{
 
-width: 10px;
+position: fixed;   
+width: 100%;
+z-index: -1;
 
+}
 
+div{
+
+    background-color: #41a6de;
+    font-family: Bangers, cursive;
+    text-align: center;
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    top: 100px;
+    left: 390px;
 
 
 }
