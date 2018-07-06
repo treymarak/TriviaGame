@@ -21,8 +21,9 @@ function questions(){
         var arr = question[i];
         console.log(arr);
         
-
     }
+
+    
 
 };
 
