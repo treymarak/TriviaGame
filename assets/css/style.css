@@ -22,7 +22,30 @@ z-index: -1;
 
 h1{
 
-    font-size: 36px;
+    font-size: 48px;
 
 
+}
+
+p#inquiry{
+
+font-size: 24px;
+
+}
+
+p#answers{
+
+font-size: 24px;
+    
+}
+    
+p#timer{
+
+font-size: 24px;
+        
+}
+
+.options{
+
+    font-size: 24px;
 }
