@@ -39,9 +39,19 @@ $(document).ready(function() {
    else {
 
    index++;
-   
+   answerWrong();
    countdownTimer.reset();
 
+   if (index < trivia.length) {
+    questions(index);
+
+  } 
+  
+  else {
+    $(".optionChoice").hide();
+    showScore();
+  }
+
 
    }
 
@@ -49,7 +59,7 @@ $(document).ready(function() {
 
    
 
-  }
+  };
 
 
 var queryURL = "https://opentdb.com/api.php?amount=10&category=29&difficulty=medium&type=multiple";
@@ -88,15 +98,10 @@ function questions(){
 
 
 
-});
-
-
-
 function setup(){
 
 index = 0;
 
-$("#inquiry").append("<button id='startButton'>Start</button>");
 $("#startButton").on("click", function(){
 
   $(this).hide();
@@ -110,10 +115,13 @@ $("#startButton").on("click", function(){
 
 function getAnswer(){
 
-$(".options").on("click", function(){
+$(".optionChoice").on("click", function(){
+
+console.log("alert", index);
 
 index++;
 
+console.log("click", index);
 $("#inquiry").text('');
 		$("#option1").text('');
 		$("#option2").text('');
@@ -125,7 +133,76 @@ $("#inquiry").text('');
 });
 
 
+}
+
+function answerCorrect(){
+
+correct++;
+
+alert("Correct!!");
+
+console.log("correct");
 
 
 }
 
+function answerWrong(){
+
+  wrong++;
+  
+  alert("Wrong!!");
+  
+  console.log("wrong");
+
+}
+
+function showScore(){
+
+  $("#inquiry").empty();
+  $("#inquiry").append("<h2><p>" + correct + " correct</p></h2>");
+  $("#inquiry").append("<h2><p>" + wrong + " correct</p></h2>");
+  countdownTimer.stop();
+  $("#timer").empty();
+
+
+}
+
+setup();
+$(".optionChoice").on("click", function(){
+
+  console.log($(this));
+ 
+ if (response.results[0].correct_answer){
+
+    answerCorrect();
+
+ }
+
+ else{
+
+   answerWrong();
+
+
+ }
+
+    $("#inquiry").text('');
+		$("#option1").text('');
+		$("#option2").text('');
+		$("#option3").text('');
+    $("#option4").text('');
+
+    index++;
+    if (index < trivia.length) {
+      questions(index);
+
+    } 
+    
+    else {
+      $(".optionChoice").hide();
+      showScore();
+    }
+});
+
+
+
+});
