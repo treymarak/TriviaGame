@@ -16,7 +16,7 @@ $(document).ready(function() {
 
    start: function(){
 
-   counter = setInterval(countdownTimer.count, 1000);
+   counter = setInterval(this.count, 1000);
 
    },
 
@@ -28,10 +28,10 @@ $(document).ready(function() {
 
    count: function(){
 
-   countdownTimer.time--;
-   console.log(countdownTimer.time);
+   this.time--;
+   console.log(this.time);
 
-   if (countdownTimer.time >= 0){
+   if (this.time >= 0){
 
     $("#timer").html("<h3>" + this.time + "seconds remaining</h3>");
 }
@@ -39,8 +39,9 @@ $(document).ready(function() {
    else {
 
    index++;
-   answerWrong();
-   countdownTimer.reset();
+  //  answerWrong();
+  console.log("!!", this); 
+   this.reset();
 
    if (index < trivia.length) {
     questions(index);
@@ -148,7 +149,7 @@ console.log("correct");
 
 function answerWrong(){
 
-  wrong++;
+  incorrect++;
   
   alert("Wrong!!");
   
@@ -160,7 +161,7 @@ function showScore(){
 
   $("#inquiry").empty();
   $("#inquiry").append("<h2><p>" + correct + " correct</p></h2>");
-  $("#inquiry").append("<h2><p>" + wrong + " correct</p></h2>");
+  $("#inquiry").append("<h2><p>" + incorrect + " correct</p></h2>");
   countdownTimer.stop();
   $("#timer").empty();
 
@@ -171,6 +172,7 @@ setup();
 $(".optionChoice").on("click", function(){
 
   console.log($(this));
+  console.log("correct answer", response.results[0].correct_answer)
  
  if (response.results[0].correct_answer){
 
