@@ -64,7 +64,7 @@ $(document).ready(function() {
   
 
   var index = 0;
-  var currentQuestion;
+  var currentQuestion = questionArray.question;
   const NUMBER_OF_QUESTIONS = 10;
 
   function appInit() {
@@ -75,6 +75,11 @@ $(document).ready(function() {
   function prepareDataset() {
     // Making ajax call and storing data in questionArray[];
     //standard ajax call
+    for (i = 0; i < currentQuestion.length; i++){
+
+    }
+   
+    console.log(currentQuestion);
     
   }
    
@@ -83,6 +88,15 @@ $(document).ready(function() {
     // DELETE that question from the array
     // setup our interface to reflect new question
     // start that timer
+
+    $("#inquiry").text(currentQuestion);
+
+    var newQuestion = questionArray.splice(currentQuestion, 1)[0];
+
+    $("#inquiry").text(newQuestion);
+
+    start();
+     
 
     //put question in currentQuestion,
     // and remove it from questionArray
@@ -168,146 +182,146 @@ $(document).ready(function() {
   };
 
 
-var queryURL = "https://opentdb.com/api.php?amount=10&category=29&difficulty=medium&type=multiple";
-var correct = 0;
-var incorrect = 0;
+// var queryURL = "https://opentdb.com/api.php?amount=10&category=29&difficulty=medium&type=multiple";
+// var correct = 0;
+// var incorrect = 0;
 
-function questions(){
+// function questions(){
 
-  countdownTimer.reset();
+//   countdownTimer.reset();
     
-    $.getJSON({
-      url: queryURL,
-      method: "GET"
-    }).then(function(response) {
-      console.log(response);
-      console.log(response.results[0].question);
-      console.log(response.results[0].correct_answer);
-      console.log(response.results[0].incorrect_answers);
+//     $.getJSON({
+//       url: queryURL,
+//       method: "GET"
+//     }).then(function(response) {
+//       console.log(response);
+//       console.log(response.results[0].question);
+//       console.log(response.results[0].correct_answer);
+//       console.log(response.results[0].incorrect_answers);
 
-      var trivia = response.results[0].question;
-      var answer = response.results[0].correct_answer;
+//       var trivia = response.results[0].question;
+//       var answer = response.results[0].correct_answer;
       
-      var answers = [response.results[0]]
+//       var answers = [response.results[0]]
 
-      $("#inquiry").text(trivia);
-      $("#option1").text(answer);
-      $("#option2").text(response.results[0].incorrect_answers[0]);
-      $("#option3").text(response.results[0].incorrect_answers[1]);
-      $("#option4").text(response.results[0].incorrect_answers[2]);
+//       $("#inquiry").text(trivia);
+//       $("#option1").text(answer);
+//       $("#option2").text(response.results[0].incorrect_answers[0]);
+//       $("#option3").text(response.results[0].incorrect_answers[1]);
+//       $("#option4").text(response.results[0].incorrect_answers[2]);
 
-    });
+//     });
     
 
-};
+// };
 
 
 
-function setup(){
+// function setup(){
 
-index = 0;
+// index = 0;
 
-$("#startButton").on("click", function(){
+// $("#startButton").on("click", function(){
 
-  $(this).hide();
-  countdownTimer.start();
-  questions(index);
+//   $(this).hide();
+//   countdownTimer.start();
+//   questions(index);
 
-});
+// });
 
 
-}
+// }
 
-function getAnswer(){
+// function getAnswer(){
 
-$(".optionChoice").on("click", function(){
+// $(".optionChoice").on("click", function(){
 
-console.log("alert", index);
+// console.log("alert", index);
 
-index++;
+// index++;
 
-console.log("click", index);
-$("#inquiry").text('');
-		$("#option1").text('');
-		$("#option2").text('');
-		$("#option3").text('');
-    $("#option4").text('');
+// console.log("click", index);
+// $("#inquiry").text('');
+// 		$("#option1").text('');
+// 		$("#option2").text('');
+// 		$("#option3").text('');
+//     $("#option4").text('');
     
-   questions();
+//    questions();
 
-});
-
-
-}
-
-function answerCorrect(){
-
-correct++;
-
-alert("Correct!!");
-
-console.log("correct");
+// });
 
 
-}
+// }
 
-function answerWrong(){
+// function answerCorrect(){
 
-  incorrect++;
+// correct++;
+
+// alert("Correct!!");
+
+// console.log("correct");
+
+
+// }
+
+// function answerWrong(){
+
+//   incorrect++;
   
-  alert("Wrong!!");
+//   alert("Wrong!!");
   
-  console.log("wrong");
+//   console.log("wrong");
 
-}
+// }
 
-function showScore(){
+// function showScore(){
 
-  $("#inquiry").empty();
-  $("#inquiry").append("<h2><p>" + correct + " correct</p></h2>");
-  $("#inquiry").append("<h2><p>" + incorrect + " correct</p></h2>");
-  countdownTimer.stop();
-  $("#timer").empty();
+//   $("#inquiry").empty();
+//   $("#inquiry").append("<h2><p>" + correct + " correct</p></h2>");
+//   $("#inquiry").append("<h2><p>" + incorrect + " correct</p></h2>");
+//   countdownTimer.stop();
+//   $("#timer").empty();
 
 
-}
+// }
 
-setup();
-$(".optionChoice").on("click", function(){
+// setup();
+// $(".optionChoice").on("click", function(){
 
-  console.log($(this));
-  console.log("correct answer", response.results[0].correct_answer)
+//   console.log($(this));
+//   console.log("correct answer", response.results[0].correct_answer)
  
- if (response.results[0].correct_answer){
+//  if (response.results[0].correct_answer){
 
-    answerCorrect();
+//     answerCorrect();
 
- }
+//  }
 
- else{
+//  else{
 
-   answerWrong();
+//    answerWrong();
 
 
- }
+//  }
 
-    $("#inquiry").text('');
-		$("#option1").text('');
-		$("#option2").text('');
-		$("#option3").text('');
-    $("#option4").text('');
+//     $("#inquiry").text('');
+// 		$("#option1").text('');
+// 		$("#option2").text('');
+// 		$("#option3").text('');
+//     $("#option4").text('');
 
-    index++;
-    if (index < trivia.length) {
-      questions(index);
+//     index++;
+//     if (index < trivia.length) {
+//       questions(index);
 
-    } 
+//     } 
     
-    else {
-      $(".optionChoice").hide();
-      showScore();
-    }
-});
+//     else {
+//       $(".optionChoice").hide();
+//       showScore();
+//     }
+// });
 
 
 appInit();
