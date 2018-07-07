@@ -10,13 +10,13 @@ $(document).ready(function() {
 
     this.time = 30;
 
-    $("#timer").html("<h3>" + this.time + "seconds remaining</h3>");
+    $("#timer").html("<h3> " + countdownTimer.time + " seconds remaining </h3>");
 
     },
 
    start: function(){
 
-   counter = setInterval(this.count, 1000);
+   counter = setInterval(countdownTimer.count, 1000);
 
    },
 
@@ -28,12 +28,12 @@ $(document).ready(function() {
 
    count: function(){
 
-   this.time--;
+   countdownTimer.time--;
    console.log(this.time);
 
-   if (this.time >= 0){
+   if (countdownTimer.time >= 0){
 
-    $("#timer").html("<h3>" + this.time + "seconds remaining</h3>");
+    $("#timer").html("<h3>" + countdownTimer.time + "seconds remaining</h3>");
 }
 
    else {
