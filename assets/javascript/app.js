@@ -1,106 +1,119 @@
 $(document).ready(function() {
 
-  var questionArray = [
-    {
-      question:
-      "In Marvel Comics, Taurus is the founder and leader of which criminal organization?",
-      correct_answer: "Zodiac",
-      incorrect_answers: ["Scorpio", "Tiger Mafia" ,"The Union"]
-    },
-    {
-      question:
-      "What was the name of the first Robin in the Batman comics?",
-      correct_answer: "Dick Grayson",
-      incorrect_answers: ["Bruce Wayne", "Jason Todd" ,"Tim Drake"]
-    },
-    {
-      question:
-      "Which of the following superheros did Wonder Woman NOT have a love interest in?",
-      correct_answer: "Green Arrow",
-      incorrect_answers: ["Superman", "Batman", "Steve Trevor"]
-    },
-    {
-      question: "What is the designation given to the Marvel Cinematic Universe?",
-      correct_answer: "Earth-199999",
-      incorrect_answers: ["Earth-616", "Earth-10005", "Earth-2008"]
-    },
-    {
-      question: "Who created Ultron of Earth-616?",
-      correct_answer: "Henry Pym",
-      incorrect_answers: ["Amadeus Cho", "Tony Stark", "Reed Richards"]
-    },
-    {
-      question:
-      "Which Batman sidekick is the son of Talia al Ghul?",
-      correct_answer: "Damian Wayne",
-      incorrect_answers: ["Dick Grayson", "Tim Drake", "Jason Todd"]
-    },
-    {
-      question:
-      "In the DC Comics 2016 reboot, Rebirth, which speedster escaped from the Speed Force after he had been erased from existance?",
-      correct_answer: "Wally West",
-      incorrect_answers: ["Johnny Quick", "Jay Garrick", "Eobard Thawne"]
-    },
-    {
-      question:
-        "Which city does Green Arrow patrol?",
-      correct_answer: "Star City",
-      incorrect_answers: ["Gotham City", "Central City", "Bludhaven"]
-    },
-    {
-      question:
-      "Which comic book character hails from the fictional nation of Wakanda?",
-      correct_answer: "Black Panther",
-      incorrect_answers: ["Thor", "Iron Man", "War Machine"]
-    },
-    {
-      question:
-        "Who is the Scarlet Witch's twin brother?",
-      correct_answer: "Quicksilver",
-      incorrect_answers: ["Magneto", "Hulk", "Wolverine"]
-    }
-  ];
-
-  
-
   var index = 0;
-  var currentQuestion = questionArray.question;
+  var questionArray = [];
+  var currentQuestion;
   const NUMBER_OF_QUESTIONS = 10;
+  const SECONDS_PER_QUESTION = 30;
+  var secondsRemaining = 0;
 
   function appInit() {
-    prepareDataset();
-    setupNewQuestion();
+    prepareDataset();    
   }
 
   function prepareDataset() {
-    // Making ajax call and storing data in questionArray[];
-    //standard ajax call
-    for (i = 0; i < currentQuestion.length; i++){
-
-    }
-   
-    console.log(currentQuestion);
+    var queryURL = "https://opentdb.com/api.php?amount=10&category=29&difficulty=medium&type=multiple";
+    var correct = 0;
+    var incorrect = 0;
     
+    $.getJSON({       
+      url: queryURL,
+      method: "GET"
+    }).then(function(response) {
+
+      console.log(response);
+      
+      for(var i = 0 ; i < response.results.length; i++) {
+        var question = {};
+        question["question"] = response.results[i].question;
+        question["answers"] = [];
+        question["answers"][0] = {answer: response.results[i].correct_answer, is_correct: true};
+        for (var j = 0; j < response.results[i].incorrect_answers.length; j++) {
+          question["answers"][j+1] = {answer: response.results[i].incorrect_answers[j], is_correct: false};  
+        }
+        questionArray.push(question);
+      }
+
+      $('#loading-text').hide();
+      $('#startButton').show();
+
+      console.log(questionArray);
+
+    });
   }
    
+  function resetListItems() {
+    for (var i = 1; i < 5; i++) {
+      $('#option' + i).show();
+    }
+  }
+
   function setupNewQuestion() {
-    // Pull a question
-    // DELETE that question from the array
-    // setup our interface to reflect new question
-    // start that timer
 
-    $("#inquiry").text(currentQuestion);
+    resetListItems();
 
-    var newQuestion = questionArray.splice(currentQuestion, 1)[0];
+    if (questionArray.length == 0) {
+      doQuizComplete();
+    }
 
-    $("#inquiry").text(newQuestion);
+    // Shuffle the array to make it interesting...
+    // This way we can just pop them off one by one.
+    currentQuestion = questionArray.pop();
+    console.log("Current Question", currentQuestion);
 
-    start();
-     
 
-    //put question in currentQuestion,
-    // and remove it from questionArray
+    // You were close on this next line, but we have to remember that 
+    // our currentQuestion holds the entire question object, so we need
+    // to refer to exactly what we want (.question in this case)  :-)
 
+    $("#inquiry").text(currentQuestion.question);
+
+    // Shuffle the answers
+    currentQuestion.answers = shuffle(currentQuestion.answers);
+    console.log("Post Shuffle Answers:", currentQuestion.answers);
+
+    for (var i = 0; i < currentQuestion.answers.length; i++) {
+      var currAns = currentQuestion.answers[i].answer;
+      console.log(currAns);
+      $("#option" + (i + 1)).text(currentQuestion.answers[i].answer);
+      var currCor = currentQuestion.answers[i].is_correct;
+      console.log(currCor);
+      $("#option" + (i + 1)).data("correct", currentQuestion.answers[i].is_correct);
+    }
+
+    secondsRemaining = SECONDS_PER_QUESTION;
+    setTimeout(startTimer, 1000);
+
+  }
+
+  function doQuizComplete() {
+    alert("Quiz is complete!  Thanks for playing!");
+  }
+
+  $("#startButton").on("click", function(event) {
+    event.preventDefault();
+    $("#startButton").hide();
+    setupNewQuestion();
+  });
+
+  $(".optionChoice").on("click", function(event) {
+    console.log("Option clicked!");
+    console.log($(this).data('correct'));
+
+    if ($(this).data('correct') === true) {
+      alert("You got it!");
+      setupNewQuestion();  
+    }
+    else {
+      // User clicked a wrong answer.
+      // I just made it hide the wrong that was just selected,
+      // but make it your own obviously!
+      $(this).hide();
+    }
+  });
+
+  function doWinningStuff() {
+    alert("You win!");
   }
 
   function handleAnswer() {
@@ -112,6 +125,31 @@ $(document).ready(function() {
   }
 
 //----------------------------
+
+function startTimer() {
+    secondsRemaining--;  
+    
+    if (secondsRemaining >= 0){
+      $("#timer").html("<h3> " + secondsRemaining + " seconds remaining </h3>");
+    }
+    else {
+      index++;
+      //  answerWrong();
+      console.log("!!", this); 
+      this.reset();
+ 
+      if (index < trivia.length) {
+        questions(index);
+      } 
+      else {
+       $(".optionChoice").hide();
+       showScore();
+      }
+    }
+
+    setTimeout(startTimer, 1000);
+}
+
 
   function start() {
     counter = setInterval(countdownTimer.count, 1000);
@@ -126,6 +164,35 @@ $(document).ready(function() {
     $("#timer").html("<h3> " + countdownTimer.time + " seconds remaining </h3>"); 
   }
   
+
+// JH: Notes below, and sweet array shuffle function courtesy of:
+//  https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+
+
+//The de-facto unbiased shuffle algorithm is the Fisher-Yates (aka Knuth) Shuffle.
+
+//See https://github.com/coolaj86/knuth-shuffle
+
+//You can see a great visualization here (and the original post linked to this)
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
 
   var countdownTimer = {
 
@@ -182,7 +249,7 @@ $(document).ready(function() {
   };
 
 
-// var queryURL = "https://opentdb.com/api.php?amount=10&category=29&difficulty=medium&type=multiple";
+//var queryURL = "https://opentdb.com/api.php?amount=10&category=29&difficulty=medium&type=multiple";
 // var correct = 0;
 // var incorrect = 0;
 

@@ -28,9 +28,8 @@ h1{
 }
 
 p#inquiry{
-
-font-size: 24px;
-
+  font-size: 24px;
+  margin-bottom: 15px;
 }
 
 p#answers{
